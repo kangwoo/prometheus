@@ -42,7 +42,6 @@ const (
 	appInstanceStatusLabel           = metaLabelPrefix + "app_instance_status"
 	appInstanceIDLabel               = metaLabelPrefix + "app_instance_id"
 	appInstanceMetadataPrefix        = metaLabelPrefix + "app_instance_metadata_"
-	appInstanceMetadataPresentPrefix = metaLabelPrefix + "app_instance_metadatapresent_"
 )
 
 // DefaultSDConfig is the default Eureka SD configuration.
@@ -189,7 +188,6 @@ func targetsForApp(app *Application) []model.LabelSet {
 			for k, v := range t.Metadata.Map {
 				ln := strutil.SanitizeLabelName(k)
 				target[model.LabelName(appInstanceMetadataPrefix+ln)] = lv(v)
-				target[model.LabelName(appInstanceMetadataPresentPrefix+ln)] = presentValue
 			}
 		}
 
