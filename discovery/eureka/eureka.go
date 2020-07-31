@@ -163,8 +163,6 @@ func createTargetGroup(app *Application) *targetgroup.Group {
 	tg := &targetgroup.Group{
 		Targets: targets,
 		Labels: model.LabelSet{
-			// FIXME
-			//model.JobLabel: appName,
 			appNameLabel: appName,
 		},
 		Source: app.Name,

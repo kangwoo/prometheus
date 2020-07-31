@@ -1299,30 +1299,42 @@ tls_config:
 
 ### `<eureka_sd_config>`
 
-CAUTION: Eureka SD is in alpha: breaking changes to configuration are still
-likely in future releases.
-
 Eureka SD configurations allow retrieving scrape targets using the
 [Eureka](https://github.com/Netflix/eureka) REST API. Prometheus
-will periodically check the REST endpoint for currently running instances for every app that has at least one healthy task.
+will periodically check the REST endpoint for currently running tasks and
+create a target group for every app that has at least one healthy task.
+
+The following meta labels are available on targets during [relabeling](#relabel_config):
+
+* `__meta_eureka_app_name`: the name of the app (with slashes replaced by dashes)
+* `__meta_eureka_app_instance_hostname`: the hostname of the instance
+* `__meta_eureka_app_instance_ipaddr`: the IP address of the app instance
+* `__meta_eureka_app_instance_status`: the status of the app instance
+* `__meta_eureka_app_instance_id`: the instanceId of the app instance
+* `__meta_eureka_app_instance_metadata_<metadataname>`: app instance metadata
 
 See below for the configuration options for Eureka discovery:
 
 ```yaml
 # List of URLs to be used to contact Eureka servers.
-# You need to provide at least one server URL, but should provide URLs for
-# all masters you have running.
+# You need to provide at least one server URL.
 servers:
   - <string>
-  
-# The HTTP resource path on which to fetch metrics from targets.
-[ metrics_path: <path> | default = /prometheus ]
 
 # Polling interval
 [ refresh_interval: <duration> | default = 30s ]
 ```
 
-By default every app listed in Eureka will be scraped by Prometheus.
+By default every app listed in Marathon will be scraped by Prometheus. If not all
+of your services provide Prometheus metrics, you can use a Marathon label and
+Prometheus relabeling to control which instances will actually be scraped.
+See [the Prometheus marathon-sd configuration file](/documentation/examples/prometheus-marathon.yml)
+for a practical example on how to set up your Marathon app and your Prometheus
+configuration.
+
+By default, all apps will show up as a single job in Prometheus (the one specified
+in the configuration file), which can also be changed using relabeling.
+
 ```
 
 ### `<static_config>`

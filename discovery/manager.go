@@ -16,7 +16,6 @@ package discovery
 import (
 	"context"
 	"fmt"
-	"github.com/prometheus/prometheus/discovery/eureka"
 	"reflect"
 	"sync"
 	"time"
@@ -34,6 +33,7 @@ import (
 	"github.com/prometheus/prometheus/discovery/dns"
 	"github.com/prometheus/prometheus/discovery/dockerswarm"
 	"github.com/prometheus/prometheus/discovery/ec2"
+	"github.com/prometheus/prometheus/discovery/eureka"
 	"github.com/prometheus/prometheus/discovery/file"
 	"github.com/prometheus/prometheus/discovery/gce"
 	"github.com/prometheus/prometheus/discovery/kubernetes"
