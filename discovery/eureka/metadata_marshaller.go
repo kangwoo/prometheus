@@ -75,7 +75,7 @@ func (s *MetaData) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		return err
 	}
 	dataInString := string(vraw.Content)
-	regex, err := regexp.Compile(`\\s*<([^<>]+)>([^<>]+)</[^<>]+>\\s*`)
+	regex, err := regexp.Compile(`\s*<([^<>]+)>([^<>]+)</[^<>]+>\s*`)
 	if err != nil {
 		return err
 	}
