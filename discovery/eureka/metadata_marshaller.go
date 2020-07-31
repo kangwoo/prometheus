@@ -14,7 +14,6 @@
 package eureka
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"regexp"
 )
@@ -26,7 +25,7 @@ type MetaData struct {
 
 type Vraw struct {
 	Content []byte `xml:",innerxml"`
-	Class   string `xml:"class,attr" json:"@class"`
+	Class   string `xml:"class,attr"`
 }
 
 func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
@@ -85,28 +84,4 @@ func (s *MetaData) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	}
 	s.Class = vraw.Class
 	return nil
-}
-
-func (s *MetaData) MarshalJSON() ([]byte, error) {
-	mapIt := make(map[string]string)
-	for key, value := range s.Map {
-		mapIt[key] = value
-	}
-	if s.Class != "" {
-		mapIt["@class"] = s.Class
-	}
-	return json.Marshal(mapIt)
-}
-func (s *MetaData) UnmarshalJSON(data []byte) error {
-	dataUnmarshal := make(map[string]string)
-	err := json.Unmarshal(data, &dataUnmarshal)
-	if err != nil {
-		return err
-	}
-	s.Map = dataUnmarshal
-	if val, ok := s.Map["@class"]; ok {
-		s.Class = val
-		delete(s.Map, "@class")
-	}
-	return err
 }
