@@ -16,6 +16,7 @@ package eureka
 import (
 	"context"
 	"errors"
+	"github.com/prometheus/prometheus/util/testutil"
 	"net/http"
 	"testing"
 
@@ -47,12 +48,8 @@ func TestEurekaSDHandleError(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != errTesting {
-		t.Fatalf("Expected error: %s", err)
-	}
-	if len(tgs) != 0 {
-		t.Fatalf("Got group: %s", tgs)
-	}
+	testutil.Equals(t, err, errTesting)
+	testutil.Equals(t, len(tgs), 0)
 }
 
 func TestEurekaSDEmptyList(t *testing.T) {
@@ -62,12 +59,8 @@ func TestEurekaSDEmptyList(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) > 0 {
-		t.Fatalf("Got group: %v", tgs)
-	}
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 0)
 }
 
 func eurekaTestApps(serviceID string) *Applications {
@@ -107,25 +100,15 @@ func TestEurekaSDSendGroup(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 target group, got", len(tgs))
-	}
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
 	tg := tgs[0]
+	testutil.Equals(t, tg.Source, "META-SERVICE")
+	testutil.Equals(t, len(tg.Targets), 1)
 
-	if tg.Source != "META-SERVICE" {
-		t.Fatalf("Wrong target group name: %s", tg.Source)
-	}
-	if len(tg.Targets) != 1 {
-		t.Fatalf("Wrong number of targets: %v", tg.Targets)
-	}
 	tgt := tg.Targets[0]
-	if tgt[model.AddressLabel] != "meta-service002.test.com:8080" {
-		t.Fatalf("Wrong target address: %s", tgt[model.AddressLabel])
-	}
+	testutil.Equals(t, tgt[model.AddressLabel], model.LabelValue("meta-service002.test.com:8080"))
 }
 
 func TestEurekaSDRemoveApp(t *testing.T) {
@@ -138,32 +121,22 @@ func TestEurekaSDRemoveApp(t *testing.T) {
 		return eurekaTestApps("002"), nil
 	}
 	tgs, err := md.refresh(context.Background())
-	if err != nil {
-		t.Fatalf("Got error on first update: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 targetgroup, got", len(tgs))
-	}
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
+
 	tg1 := tgs[0]
 
 	md.appsClient = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
 		return eurekaTestApps("001"), nil
 	}
 	tgs, err = md.refresh(context.Background())
-	if err != nil {
-		t.Fatalf("Got error on second update: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 targetgroup, got", len(tgs))
-	}
-	tg2 := tgs[0]
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
-	if tg2.Source != tg1.Source {
-		t.Fatalf("Source is different: %s != %s", tg1.Source, tg2.Source)
-		if len(tg2.Targets) > 0 {
-			t.Fatalf("Got a non-empty target set: %s", tg2.Targets)
-		}
-	}
+	tg2 := tgs[0]
+	testutil.Equals(t, tg2.Source, tg1.Source)
+	testutil.Equals(t, len(tg2.Targets), 1)
+
 }
 
 func eurekaTestAppsWithMultipleInstance() *Applications {
@@ -234,28 +207,18 @@ func TestEurekaSDSendGroupWithMultipleInstances(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 target group, got", len(tgs))
-	}
-	tg := tgs[0]
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
-	if tg.Source != "META-SERVICE" {
-		t.Fatalf("Wrong target group name: %s", tg.Source)
-	}
-	if len(tg.Targets) != 2 {
-		t.Fatalf("Wrong number of targets: %v", tg.Targets)
-	}
+	tg := tgs[0]
+	testutil.Equals(t, tg.Source, "META-SERVICE")
+	testutil.Equals(t, len(tg.Targets), 2)
+
 	tgt := tg.Targets[0]
-	if tgt[model.AddressLabel] != "meta-service002.test.com:8080" {
-		t.Fatalf("Wrong target address: %s", tgt[model.AddressLabel])
-	}
+	testutil.Equals(t, tgt[model.AddressLabel], model.LabelValue("meta-service002.test.com:8080"))
+
 	tgt = tg.Targets[1]
-	if tgt[model.AddressLabel] != "meta-service001.test.com:8080" {
-		t.Fatalf("Wrong target address: %s", tgt[model.AddressLabel])
-	}
+	testutil.Equals(t, tgt[model.AddressLabel], model.LabelValue("meta-service001.test.com:8080"))
 }
 
 func eurekaTestZeroApps() *Applications {
@@ -277,20 +240,13 @@ func TestEurekaSDZeroApps(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 target group, got", len(tgs))
-	}
-	tg := tgs[0]
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
-	if tg.Source != "META-SERVICE" {
-		t.Fatalf("Wrong target group name: %s", tg.Source)
-	}
-	if len(tg.Targets) != 0 {
-		t.Fatalf("Wrong number of targets: %v", tg.Targets)
-	}
+	tg := tgs[0]
+	testutil.Ok(t, err)
+	testutil.Equals(t, tg.Source, "META-SERVICE")
+	testutil.Equals(t, len(tg.Targets), 0)
 }
 
 func eurekaTestAppsWithMetadata() *Applications {
@@ -336,33 +292,19 @@ func TestEurekaSDAppsWithMetadata(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 target group, got", len(tgs))
-	}
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
 	tg := tgs[0]
+	testutil.Equals(t, tg.Source, "META-SERVICE")
+	testutil.Equals(t, len(tg.Targets), 1)
 
-	if tg.Source != "META-SERVICE" {
-		t.Fatalf("Wrong target group name: %s", tg.Source)
-	}
-	if len(tg.Targets) != 1 {
-		t.Fatalf("Wrong number of targets: %v", tg.Targets)
-	}
 	tgt := tg.Targets[0]
-	if tgt[model.AddressLabel] != "meta-service002.test.com:8080" {
-		t.Fatalf("Wrong target address: %s", tgt[model.AddressLabel])
-	}
-
-	if tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_scrape")] != "true" {
-		t.Fatalf("Wrong metadata value : %s", tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_scrape")])
-	}
-
-	if tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_path")] != "/actuator/prometheus" {
-		t.Fatalf("Wrong metadata value : %s", tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_path")])
-	}
+	testutil.Equals(t, tgt[model.AddressLabel], model.LabelValue("meta-service002.test.com:8080"))
+	testutil.Equals(t, tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_scrape")],
+		model.LabelValue("true"))
+	testutil.Equals(t, tgt[model.LabelName(appInstanceMetadataPrefix+"prometheus_path")],
+		model.LabelValue("/actuator/prometheus"))
 }
 
 func eurekaTestAppsWithMetadataManagementPort() *Applications {
@@ -406,23 +348,13 @@ func TestEurekaSDAppsWithMetadataMetadataManagementPort(t *testing.T) {
 		}
 	)
 	tgs, err := testUpdateServices(client)
-	if err != nil {
-		t.Fatalf("Got error: %s", err)
-	}
-	if len(tgs) != 1 {
-		t.Fatal("Expected 1 target group, got", len(tgs))
-	}
+	testutil.Ok(t, err)
+	testutil.Equals(t, len(tgs), 1)
 
 	tg := tgs[0]
+	testutil.Equals(t, tg.Source, "META-SERVICE")
+	testutil.Equals(t, len(tg.Targets), 1)
 
-	if tg.Source != "META-SERVICE" {
-		t.Fatalf("Wrong target group name: %s", tg.Source)
-	}
-	if len(tg.Targets) != 1 {
-		t.Fatalf("Wrong number of targets: %v", tg.Targets)
-	}
 	tgt := tg.Targets[0]
-	if tgt[model.AddressLabel] != "meta-service002.test.com:8090" {
-		t.Fatalf("Wrong target address: %s", tgt[model.AddressLabel])
-	}
+	testutil.Equals(t, tgt[model.AddressLabel], model.LabelValue("meta-service002.test.com:8090"))
 }

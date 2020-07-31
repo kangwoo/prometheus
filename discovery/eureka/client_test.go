@@ -207,7 +207,5 @@ func Test500ErrorHttpResponse(t *testing.T) {
 	defer ts.Close()
 
 	_, err := fetchApps(context.TODO(), []string{ts.URL}, &http.Client{})
-	if err == nil {
-		t.Fatalf("Expected error for 5xx HTTP response from marathon server, got nil")
-	}
+	testutil.NotOk(t, err, "5xx HTTP response")
 }
