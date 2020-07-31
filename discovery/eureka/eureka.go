@@ -30,18 +30,16 @@ import (
 )
 
 const (
-	presentValue = model.LabelValue("true")
-
 	// metaLabelPrefix is the meta prefix used for all meta labels.
 	// in this discovery.
 	metaLabelPrefix = model.MetaLabelPrefix + "eureka_"
 
-	appNameLabel                     = metaLabelPrefix + "app_name"
-	appInstanceHostNameLabel         = metaLabelPrefix + "app_instance_hostname"
-	appInstanceIPAddrLabel           = metaLabelPrefix + "app_instance_ipaddr"
-	appInstanceStatusLabel           = metaLabelPrefix + "app_instance_status"
-	appInstanceIDLabel               = metaLabelPrefix + "app_instance_id"
-	appInstanceMetadataPrefix        = metaLabelPrefix + "app_instance_metadata_"
+	appNameLabel              = metaLabelPrefix + "app_name"
+	appInstanceHostNameLabel  = metaLabelPrefix + "app_instance_hostname"
+	appInstanceIPAddrLabel    = metaLabelPrefix + "app_instance_ipaddr"
+	appInstanceStatusLabel    = metaLabelPrefix + "app_instance_status"
+	appInstanceIDLabel        = metaLabelPrefix + "app_instance_id"
+	appInstanceMetadataPrefix = metaLabelPrefix + "app_instance_metadata_"
 )
 
 // DefaultSDConfig is the default Eureka SD configuration.
