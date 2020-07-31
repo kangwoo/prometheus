@@ -43,8 +43,8 @@ func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	tokens := []xml.Token{start}
 
 	for key, value := range s.Map {
-		t := xml.StartElement{Name: xml.Name{"", key}}
-		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{t.Name})
+		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
+		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{Name: t.Name})
 	}
 
 	tokens = append(tokens, xml.EndElement{
@@ -70,9 +70,12 @@ func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 func (s *MetaData) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	s.Map = make(map[string]string)
 	vraw := &Vraw{}
-	d.DecodeElement(vraw, &start)
+	err := d.DecodeElement(vraw, &start)
+	if err != nil {
+		return err
+	}
 	dataInString := string(vraw.Content)
-	regex, err := regexp.Compile("\\s*<([^<>]+)>([^<>]+)</[^<>]+>\\s*")
+	regex, err := regexp.Compile(`\\s*<([^<>]+)>([^<>]+)</[^<>]+>\\s*`)
 	if err != nil {
 		return err
 	}
@@ -96,7 +99,10 @@ func (s *MetaData) MarshalJSON() ([]byte, error) {
 }
 func (s *MetaData) UnmarshalJSON(data []byte) error {
 	dataUnmarshal := make(map[string]string)
-	err := json.Unmarshal(data, dataUnmarshal)
+	err := json.Unmarshal(data, &dataUnmarshal)
+	if err != nil {
+		return err
+	}
 	s.Map = dataUnmarshal
 	if val, ok := s.Map["@class"]; ok {
 		s.Class = val

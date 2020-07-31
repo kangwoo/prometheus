@@ -70,12 +70,12 @@ func TestEurekaSDEmptyList(t *testing.T) {
 	}
 }
 
-func eurekaTestApps(serviceId string) *Applications {
+func eurekaTestApps(serviceID string) *Applications {
 	var (
 		ins = Instance{
-			HostName:   "meta-service" + serviceId + ".test.com",
+			HostName:   "meta-service" + serviceID + ".test.com",
 			App:        "META-SERVICE",
-			IpAddr:     "192.133.87.237",
+			IPAddr:     "192.133.87.237",
 			VipAddress: "meta-service",
 			Status:     "UP",
 			Port: &Port{
@@ -87,7 +87,7 @@ func eurekaTestApps(serviceId string) *Applications {
 				Enabled: false,
 			},
 			Metadata:   nil,
-			InstanceID: "meta-service" + serviceId + ".test.com:meta-service:8080",
+			InstanceID: "meta-service" + serviceID + ".test.com:meta-service:8080",
 		}
 
 		app = Application{
@@ -172,7 +172,7 @@ func eurekaTestAppsWithMultipleInstance() *Applications {
 			{
 				HostName:   "meta-service002.test.com",
 				App:        "META-SERVICE",
-				IpAddr:     "192.133.87.237",
+				IPAddr:     "192.133.87.237",
 				VipAddress: "meta-service",
 				Status:     "UP",
 				Port: &Port{
@@ -195,7 +195,7 @@ func eurekaTestAppsWithMultipleInstance() *Applications {
 			{
 				HostName:   "meta-service001.test.com",
 				App:        "META-SERVICE",
-				IpAddr:     "192.133.87.236",
+				IPAddr:     "192.133.87.236",
 				VipAddress: "meta-service",
 				Status:     "UP",
 				Port: &Port{
@@ -298,7 +298,7 @@ func eurekaTestAppsWithMetadata() *Applications {
 		ins = Instance{
 			HostName:   "meta-service002.test.com",
 			App:        "META-SERVICE",
-			IpAddr:     "192.133.87.237",
+			IPAddr:     "192.133.87.237",
 			VipAddress: "meta-service",
 			Status:     "UP",
 			Port: &Port{
@@ -370,7 +370,7 @@ func eurekaTestAppsWithMetadataManagementPort() *Applications {
 		ins = Instance{
 			HostName:   "meta-service002.test.com",
 			App:        "META-SERVICE",
-			IpAddr:     "192.133.87.237",
+			IPAddr:     "192.133.87.237",
 			VipAddress: "meta-service",
 			Status:     "UP",
 			Port: &Port{

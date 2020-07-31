@@ -23,7 +23,7 @@ import (
 )
 
 func TestFetchApps(t *testing.T) {
-	appsXml := `<applications>
+	appsXML := `<applications>
   <versions__delta>1</versions__delta>
   <apps__hashcode>UP_4_</apps__hashcode>
   <application>
@@ -174,7 +174,7 @@ func TestFetchApps(t *testing.T) {
 	respHandler := func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/xml")
-		io.WriteString(w, appsXml)
+		io.WriteString(w, appsXML)
 	}
 	// Create a test server with mock HTTP handler.
 	ts := httptest.NewServer(http.HandlerFunc(respHandler))

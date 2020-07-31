@@ -40,9 +40,9 @@ const (
 
 	appNameLabel                     = metaLabelPrefix + "app_name"
 	appInstanceHostNameLabel         = metaLabelPrefix + "app_instance_hostname"
-	appInstanceIpAddrLabel           = metaLabelPrefix + "app_instance_ipaddr"
+	appInstanceIPAddrLabel           = metaLabelPrefix + "app_instance_ipaddr"
 	appInstanceStatusLabel           = metaLabelPrefix + "app_instance_status"
-	appInstanceIdLabel               = metaLabelPrefix + "app_instance_id"
+	appInstanceIDLabel               = metaLabelPrefix + "app_instance_id"
 	appInstanceMetadataPrefix        = metaLabelPrefix + "app_instance_metadata_"
 	appInstanceMetadataPresentPrefix = metaLabelPrefix + "app_instance_metadatapresent_"
 )
@@ -182,9 +182,9 @@ func targetsForApp(app *Application) []model.LabelSet {
 			model.InstanceLabel: model.LabelValue(t.InstanceID),
 
 			appInstanceHostNameLabel: lv(t.HostName),
-			appInstanceIpAddrLabel:   lv(t.IpAddr),
+			appInstanceIPAddrLabel:   lv(t.IPAddr),
 			appInstanceStatusLabel:   lv(t.Status),
-			appInstanceIdLabel:       lv(t.InstanceID),
+			appInstanceIDLabel:       lv(t.InstanceID),
 		}
 
 		if t.Metadata != nil {

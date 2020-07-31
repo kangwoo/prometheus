@@ -42,11 +42,11 @@ type Port struct {
 
 type Instance struct {
 	HostName                      string          `xml:"hostName" json:"hostName"`
-	HomePageUrl                   string          `xml:"homePageUrl,omitempty" json:"homePageUrl,omitempty"`
-	StatusPageUrl                 string          `xml:"statusPageUrl" json:"statusPageUrl"`
-	HealthCheckUrl                string          `xml:"healthCheckUrl,omitempty" json:"healthCheckUrl,omitempty"`
+	HomePageURL                   string          `xml:"homePageUrl,omitempty" json:"homePageUrl,omitempty"`
+	StatusPageURL                 string          `xml:"statusPageUrl" json:"statusPageUrl"`
+	HealthCheckURL                string          `xml:"healthCheckUrl,omitempty" json:"healthCheckUrl,omitempty"`
 	App                           string          `xml:"app" json:"app"`
-	IpAddr                        string          `xml:"ipAddr" json:"ipAddr"`
+	IPAddr                        string          `xml:"ipAddr" json:"ipAddr"`
 	VipAddress                    string          `xml:"vipAddress" json:"vipAddress"`
 	SecureVipAddress              string          `xml:"secureVipAddress,omitempty" json:"secureVipAddress,omitempty"`
 	Status                        string          `xml:"status" json:"status"`
@@ -60,7 +60,7 @@ type Instance struct {
 	LastDirtyTimestamp            int             `xml:"lastDirtyTimestamp,omitempty" json:"lastDirtyTimestamp,omitempty"`
 	ActionType                    string          `xml:"actionType,omitempty" json:"actionType,omitempty"`
 	Overriddenstatus              string          `xml:"overriddenstatus,omitempty" json:"overriddenstatus,omitempty"`
-	CountryId                     int             `xml:"countryId,omitempty" json:"countryId,omitempty"`
+	CountryID                     int             `xml:"countryId,omitempty" json:"countryId,omitempty"`
 	InstanceID                    string          `xml:"instanceId,omitempty" json:"instanceId,omitempty"`
 }
 type DataCenterInfo struct {
@@ -73,13 +73,13 @@ type DataCenterMetadata struct {
 	AmiLaunchIndex   string `xml:"ami-launch-index,omitempty" json:"ami-launch-index,omitempty"`
 	LocalHostname    string `xml:"local-hostname,omitempty" json:"local-hostname,omitempty"`
 	AvailabilityZone string `xml:"availability-zone,omitempty" json:"availability-zone,omitempty"`
-	InstanceId       string `xml:"instance-id,omitempty" json:"instance-id,omitempty"`
+	InstanceID       string `xml:"instance-id,omitempty" json:"instance-id,omitempty"`
 	PublicIpv4       string `xml:"public-ipv4,omitempty" json:"public-ipv4,omitempty"`
 	PublicHostname   string `xml:"public-hostname,omitempty" json:"public-hostname,omitempty"`
 	AmiManifestPath  string `xml:"ami-manifest-path,omitempty" json:"ami-manifest-path,omitempty"`
 	LocalIpv4        string `xml:"local-ipv4,omitempty" json:"local-ipv4,omitempty"`
 	Hostname         string `xml:"hostname,omitempty" json:"hostname,omitempty"`
-	AmiId            string `xml:"ami-id,omitempty" json:"ami-id,omitempty"`
+	AmiID            string `xml:"ami-id,omitempty" json:"ami-id,omitempty"`
 	InstanceType     string `xml:"instance-type,omitempty" json:"instance-type,omitempty"`
 }
 
