@@ -84,7 +84,7 @@ type Discovery struct {
 
 // New creates a new Eureka discovery for the given role.
 func NewDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
-	rt, err := config_util.NewRoundTripperFromConfig(conf.HTTPClientConfig, "marathon_sd", false)
+	rt, err := config_util.NewRoundTripperFromConfig(conf.HTTPClientConfig, "eureka_sd", false)
 	if err != nil {
 		return nil, err
 	}
