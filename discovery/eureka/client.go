@@ -1,4 +1,4 @@
-// Copyright 2016 The Prometheus Authors
+// Copyright 2020 The Prometheus Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -17,11 +17,12 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type Applications struct {
@@ -113,8 +114,8 @@ func fetchApps(ctx context.Context, servers []string, client *http.Client) (*App
 		resp.Body.Close()
 	}()
 
-	if (resp.StatusCode < 200) || (resp.StatusCode >= 300) {
-		return nil, errors.Errorf("non 2xx status '%v' response during eureka service discovery", resp.StatusCode)
+	if resp.StatusCode/100 != 2 {
+		return nil, errors.Errorf("non 2xx status '%d' response during eureka service discovery", resp.StatusCode)
 	}
 
 	var apps Applications

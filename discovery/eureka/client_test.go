@@ -1,4 +1,4 @@
-// Copyright 2016 The Prometheus Authors
+// Copyright 2020 The Prometheus Authors
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,11 +15,12 @@ package eureka
 
 import (
 	"context"
-	"github.com/prometheus/prometheus/util/testutil"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/prometheus/prometheus/util/testutil"
 )
 
 func TestFetchApps(t *testing.T) {
@@ -181,9 +182,8 @@ func TestFetchApps(t *testing.T) {
 	defer ts.Close()
 
 	apps, err := fetchApps(context.TODO(), []string{ts.URL}, &http.Client{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	testutil.Ok(t, err)
+
 	testutil.Equals(t, len(apps.Applications), 2)
 	testutil.Equals(t, apps.Applications[0].Name, "CONFIG-SERVICE")
 	testutil.Equals(t, apps.Applications[1].Name, "META-SERVICE")

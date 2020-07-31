@@ -1325,11 +1325,11 @@ servers:
 [ refresh_interval: <duration> | default = 30s ]
 ```
 
-By default every app listed in Marathon will be scraped by Prometheus. If not all
-of your services provide Prometheus metrics, you can use a Marathon label and
+By default every app listed in Eureka will be scraped by Prometheus. If not all
+of your services provide Prometheus metrics, you can use a Eureka metadata and
 Prometheus relabeling to control which instances will actually be scraped.
-See [the Prometheus marathon-sd configuration file](/documentation/examples/prometheus-marathon.yml)
-for a practical example on how to set up your Marathon app and your Prometheus
+See [the Prometheus eureka-sd configuration file](/documentation/examples/prometheus-eureka.yml)
+for a practical example on how to set up your Eureka app and your Prometheus
 configuration.
 
 By default, all apps will show up as a single job in Prometheus (the one specified
