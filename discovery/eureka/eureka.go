@@ -187,10 +187,12 @@ func targetsForApp(app *Application) []model.LabelSet {
 			appInstanceIdLabel:       lv(t.InstanceID),
 		}
 
-		for k, v := range t.Metadata.Map {
-			ln := strutil.SanitizeLabelName(k)
-			target[model.LabelName(appInstanceMetadataPrefix+ln)] = lv(v)
-			target[model.LabelName(appInstanceMetadataPresentPrefix+ln)] = presentValue
+		if t.Metadata != nil {
+			for k, v := range t.Metadata.Map {
+				ln := strutil.SanitizeLabelName(k)
+				target[model.LabelName(appInstanceMetadataPrefix+ln)] = lv(v)
+				target[model.LabelName(appInstanceMetadataPresentPrefix+ln)] = presentValue
+			}
 		}
 
 		targets = append(targets, target)
@@ -204,7 +206,8 @@ func lv(s string) model.LabelValue {
 
 func targetEndpoint(instance *Instance) string {
 	var port string
-	if len(instance.Metadata.Map["management.port"]) > 0 {
+	if instance.Metadata != nil &&
+		len(instance.Metadata.Map["management.port"]) > 0 {
 		port = instance.Metadata.Map["management.port"]
 	} else {
 		port = strconv.Itoa(instance.Port.Port)

@@ -57,7 +57,9 @@ func TestEurekaSDHandleError(t *testing.T) {
 
 func TestEurekaSDEmptyList(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) { return &Applications{}, nil }
+		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+			return &Applications{}, nil
+		}
 	)
 	tgs, err := testUpdateServices(client)
 	if err != nil {
