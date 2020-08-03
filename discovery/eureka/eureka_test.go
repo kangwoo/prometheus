@@ -25,8 +25,7 @@ import (
 )
 
 var (
-	testServers = []string{"http://localhost:8761"}
-	conf        = SDConfig{Servers: testServers}
+	conf = SDConfig{Server: "http://localhost:8761"}
 )
 
 func testUpdateServices(client applicationsClient) ([]*targetgroup.Group, error) {
@@ -43,7 +42,7 @@ func testUpdateServices(client applicationsClient) ([]*targetgroup.Group, error)
 func TestEurekaSDHandleError(t *testing.T) {
 	var (
 		errTesting = errors.New("testing failure")
-		client     = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client     = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return nil, errTesting
 		}
 	)
@@ -54,7 +53,7 @@ func TestEurekaSDHandleError(t *testing.T) {
 
 func TestEurekaSDEmptyList(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return &Applications{}, nil
 		}
 	)
@@ -95,7 +94,7 @@ func eurekaTestApps(serviceID string) *Applications {
 
 func TestEurekaSDSendGroup(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return eurekaTestApps("002"), nil
 		}
 	)
@@ -117,7 +116,7 @@ func TestEurekaSDRemoveApp(t *testing.T) {
 		t.Fatalf("%s", err)
 	}
 
-	md.appsClient = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+	md.appsClient = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 		return eurekaTestApps("002"), nil
 	}
 	tgs, err := md.refresh(context.Background())
@@ -126,7 +125,7 @@ func TestEurekaSDRemoveApp(t *testing.T) {
 
 	tg1 := tgs[0]
 
-	md.appsClient = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+	md.appsClient = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 		return eurekaTestApps("001"), nil
 	}
 	tgs, err = md.refresh(context.Background())
@@ -202,7 +201,7 @@ func eurekaTestAppsWithMultipleInstance() *Applications {
 
 func TestEurekaSDSendGroupWithMultipleInstances(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return eurekaTestAppsWithMultipleInstance(), nil
 		}
 	)
@@ -235,7 +234,7 @@ func eurekaTestZeroApps() *Applications {
 
 func TestEurekaSDZeroApps(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return eurekaTestZeroApps(), nil
 		}
 	)
@@ -287,7 +286,7 @@ func eurekaTestAppsWithMetadata() *Applications {
 
 func TestEurekaSDAppsWithMetadata(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return eurekaTestAppsWithMetadata(), nil
 		}
 	)
@@ -343,7 +342,7 @@ func eurekaTestAppsWithMetadataManagementPort() *Applications {
 
 func TestEurekaSDAppsWithMetadataMetadataManagementPort(t *testing.T) {
 	var (
-		client = func(_ context.Context, _ []string, _ *http.Client) (*Applications, error) {
+		client = func(_ context.Context, _ string, _ *http.Client) (*Applications, error) {
 			return eurekaTestAppsWithMetadataManagementPort(), nil
 		}
 	)

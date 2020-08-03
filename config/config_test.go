@@ -691,9 +691,7 @@ var expectedConf = &Config{
 			ServiceDiscoveryConfig: sd_config.ServiceDiscoveryConfig{
 				EurekaSDConfigs: []*eureka.SDConfig{
 					{
-						Servers: []string{
-							"http://eureka.example.com:8761/eureka",
-						},
+						Server:          "http://eureka.example.com:8761/eureka",
 						RefreshInterval: model.Duration(30 * time.Second),
 					},
 				},
@@ -1007,8 +1005,8 @@ var expectedErrors = []struct {
 		errMsg:   "empty or null section in static_configs",
 	},
 	{
-		filename: "eureka_no_servers.bad.yml",
-		errMsg:   "must contain at least one Eureka server",
+		filename: "eureka_no_server.bad.yml",
+		errMsg:   "empty or null eureka server",
 	},
 }
 

@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -96,8 +95,8 @@ type LeaseInfo struct {
 
 const appListPath string = "/apps"
 
-func fetchApps(ctx context.Context, servers []string, client *http.Client) (*Applications, error) {
-	url := randomAppsURL(servers)
+func fetchApps(ctx context.Context, server string, client *http.Client) (*Applications, error) {
+	url := appsURL(server)
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -126,9 +125,6 @@ func fetchApps(ctx context.Context, servers []string, client *http.Client) (*App
 	return &apps, nil
 }
 
-// randomAppsURL randomly selects a server from an array and creates
-// an URL pointing to the app list.
-func randomAppsURL(servers []string) string {
-	server := servers[rand.Intn(len(servers))]
+func appsURL(server string) string {
 	return fmt.Sprintf("%s%s", server, appListPath)
 }

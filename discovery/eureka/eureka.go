@@ -49,7 +49,7 @@ var DefaultSDConfig = SDConfig{
 
 // SDConfig is the configuration for applications running on Eureka.
 type SDConfig struct {
-	Servers          []string                     `yaml:"servers,omitempty"`
+	Server           string                       `yaml:"server,omitempty"`
 	RefreshInterval  model.Duration               `yaml:"refresh_interval,omitempty"`
 	HTTPClientConfig config_util.HTTPClientConfig `yaml:",inline"`
 }
@@ -62,20 +62,20 @@ func (c *SDConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	if err != nil {
 		return err
 	}
-	if len(c.Servers) == 0 {
-		return errors.New("eureka_sd: must contain at least one Eureka server")
+	if len(c.Server) == 0 {
+		return errors.New("eureka_sd: empty or null eureka server")
 	}
 
 	return c.HTTPClientConfig.Validate()
 }
 
-type applicationsClient func(ctx context.Context, servers []string, client *http.Client) (*Applications, error)
+type applicationsClient func(ctx context.Context, server string, client *http.Client) (*Applications, error)
 
 // Discovery provides service discovery based on a Eureka instance.
 type Discovery struct {
 	*refresh.Discovery
 	client      *http.Client
-	servers     []string
+	server      string
 	lastRefresh map[string]*targetgroup.Group
 	appsClient  applicationsClient
 }
@@ -89,7 +89,7 @@ func NewDiscovery(conf SDConfig, logger log.Logger) (*Discovery, error) {
 
 	d := &Discovery{
 		client:     &http.Client{Transport: rt},
-		servers:    conf.Servers,
+		server:     conf.Server,
 		appsClient: fetchApps,
 	}
 	d.Discovery = refresh.NewDiscovery(
@@ -131,7 +131,7 @@ func (d *Discovery) refresh(ctx context.Context) ([]*targetgroup.Group, error) {
 }
 
 func (d *Discovery) fetchTargetGroups(ctx context.Context) (map[string]*targetgroup.Group, error) {
-	apps, err := d.appsClient(ctx, d.servers, d.client)
+	apps, err := d.appsClient(ctx, d.server, d.client)
 	if err != nil {
 		return nil, err
 	}

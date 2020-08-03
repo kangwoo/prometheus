@@ -181,7 +181,7 @@ func TestFetchApps(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(respHandler))
 	defer ts.Close()
 
-	apps, err := fetchApps(context.TODO(), []string{ts.URL}, &http.Client{})
+	apps, err := fetchApps(context.TODO(), ts.URL, &http.Client{})
 	testutil.Ok(t, err)
 
 	testutil.Equals(t, len(apps.Applications), 2)
@@ -206,6 +206,6 @@ func Test500ErrorHttpResponse(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(respHandler))
 	defer ts.Close()
 
-	_, err := fetchApps(context.TODO(), []string{ts.URL}, &http.Client{})
+	_, err := fetchApps(context.TODO(), ts.URL, &http.Client{})
 	testutil.NotOk(t, err, "5xx HTTP response")
 }

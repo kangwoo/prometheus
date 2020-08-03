@@ -12,8 +12,7 @@ scrape_configs:
 
     # Scrape Eureka itself to discover new services every minute.
     eureka_sd_configs:
-      - servers:
-          - http://localhost:8761/eureka
+      - server: http://localhost:8761/eureka
         refresh_interval: 60s
 
     relabel_configs:
