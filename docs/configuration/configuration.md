@@ -1316,10 +1316,8 @@ The following meta labels are available on targets during [relabeling](#relabel_
 See below for the configuration options for Eureka discovery:
 
 ```yaml
-# List of URLs to be used to contact Eureka servers.
-# You need to provide at least one server URL.
-servers:
-  - <string>
+# You need to provide eureka server URL.
+server: <string>
 
 # Polling interval
 [ refresh_interval: <duration> | default = 30s ]
