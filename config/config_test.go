@@ -34,6 +34,7 @@ import (
 	"github.com/prometheus/prometheus/discovery/dns"
 	"github.com/prometheus/prometheus/discovery/dockerswarm"
 	"github.com/prometheus/prometheus/discovery/ec2"
+	"github.com/prometheus/prometheus/discovery/eureka"
 	"github.com/prometheus/prometheus/discovery/file"
 	"github.com/prometheus/prometheus/discovery/kubernetes"
 	"github.com/prometheus/prometheus/discovery/marathon"
@@ -677,6 +678,25 @@ var expectedConf = &Config{
 				},
 			},
 		},
+		{
+			JobName: "service-eureka",
+
+			HonorTimestamps: true,
+			ScrapeInterval:  model.Duration(15 * time.Second),
+			ScrapeTimeout:   DefaultGlobalConfig.ScrapeTimeout,
+
+			MetricsPath: DefaultScrapeConfig.MetricsPath,
+			Scheme:      DefaultScrapeConfig.Scheme,
+
+			ServiceDiscoveryConfig: sd_config.ServiceDiscoveryConfig{
+				EurekaSDConfigs: []*eureka.SDConfig{
+					{
+						Server:          "http://eureka.example.com:8761/eureka",
+						RefreshInterval: model.Duration(30 * time.Second),
+					},
+				},
+			},
+		},
 	},
 	AlertingConfig: AlertingConfig{
 		AlertmanagerConfigs: []*AlertmanagerConfig{
@@ -983,6 +1003,10 @@ var expectedErrors = []struct {
 	{
 		filename: "empty_static_config.bad.yml",
 		errMsg:   "empty or null section in static_configs",
+	},
+	{
+		filename: "eureka_no_server.bad.yml",
+		errMsg:   "empty or null eureka server",
 	},
 }
 
